@@ -12,9 +12,11 @@ RegisterServerEvent('payforplayer2')
 AddEventHandler('payforplayer2',function(winnings)
 	
 	local _source = source
+	--local item =cchip
 	local xPlayer  = ESX.GetPlayerFromId(_source)
-	xPlayer.addMoney(winnings)
-
+	--xPlayer.addMoney(winnings)
+	xPlayer.addInventoryItem("cchip", winnings)
+	TriggerClientEvent("klrp_core:Success", source, "Casion ", winnings.. "Chips won", 2500, false, "leftCenter")
 	local societyAccount = nil
 	TriggerEvent('esx_addonaccount:getSharedAccount', 'society_casino', function(account)
 		societyAccount = account
@@ -32,13 +34,16 @@ AddEventHandler('playerpays2',function(bet)
 
 	local _source = source
 	local xPlayer  = ESX.GetPlayerFromId(_source)
-
-	if xPlayer.get('money') >= bet then
+	
+	if xPlayer.getInventoryItem('cchip').count >= bet then
+	--if xPlayer.get('money') >= bet then
 		local societyAccount = nil
 		TriggerEvent('esx_addonaccount:getSharedAccount', 'society_casino', function(account)
 			societyAccount = account
 		end)
-		xPlayer.removeMoney(bet)
+		--xPlayer.removeMoney(bet)
+		xPlayer.removeInventoryItem('cchip', bet) 
+		TriggerClientEvent("klrp_core:Error", source, "Slots", bet.. "Chips used", 3500, false, "leftCenter")
 		societyAccount.addMoney(bet)
 		TriggerClientEvent('spinit2',_source)
 	else

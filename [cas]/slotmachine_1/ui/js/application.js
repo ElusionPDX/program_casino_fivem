@@ -506,7 +506,7 @@ var down_bet_amount = function(bet_amount) {
 
   } else {
 
-	 playerbet -=100;
+	 playerbet -=10;
   }
 
 
@@ -527,7 +527,7 @@ var change_bet_amount = function(bet_amount) {
 
   } else {
 
-	 playerbet +=100;
+	 playerbet +=10;
   }
 
 
@@ -755,9 +755,9 @@ var render = function () {
   ctx.textAlign = "right";
   ctx.textBaseline = "top";
  // ctx.fillText(game_state.win, 265, 358);
-  ctx.fillText("Wygrana " + game_state.paid+"$", 385, 367);
+  ctx.fillText("Winnings " + game_state.paid+"Chips", 385, 367);
 
-  ctx.fillText("Bet " +playerbet+"$", 595, 367);
+  ctx.fillText("Bet " +playerbet+"Chips", 595, 367);
 
 
   // draw game state highlight tiles
@@ -766,8 +766,8 @@ var render = function () {
 	ctx.font = "21px 'Titan One', cursive";
 	ctx.textAlign = "right";
 	ctx.textBaseline = "top";
-	  ctx.fillText("Darmowa Kolejka " +freespins, 395, 367);
-  ctx.fillText("Wygrana " + game_state.paid+"$", 625, 367);
+	  ctx.fillText("Free Queue " +freespins, 395, 367);
+  ctx.fillText("Your Bet " + game_state.paid+"Chips", 625, 367);
   }
 
 
