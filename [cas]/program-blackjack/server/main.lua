@@ -110,7 +110,8 @@ ESX.RegisterServerCallback('program-blackjack:checkMoney', function(source, cb)
     local money = xPlayer.getMoney()
     money = tonumber(money)
     bet = tonumber(bet)
-    if money >= bet then
+	if xPlayer.getInventoryItem('cchip').count >= bet then
+   -- if money >= bet then
         cb(true)
     else 
         cb(false)
@@ -260,13 +261,15 @@ AddEventHandler('program-blackjack:pickWinner', function()
     local player1 = ESX.GetPlayerFromId(player1)
     local player2 = ESX.GetPlayerFromId(player2)
     if player1result >= 21 and player2result >= 21 then
-        TriggerClientEvent('esx:showNotification', player1.source, '~y~Remisik~s~!')
-        TriggerClientEvent('esx:showNotification', player2.source, '~y~Remisik~s~!')
-        TriggerClientEvent('esx:showNotification', croupier.source, '~y~Remisik~s~!')
+        TriggerClientEvent('esx:showNotification', player1.source, '~y~Draw~s~!')
+        TriggerClientEvent('esx:showNotification', player2.source, '~y~Draw~s~!')
+        TriggerClientEvent('esx:showNotification', croupier.source, '~y~Draw~s~!')
         if player1black then
-            player1.addAccountMoney('black_money', bet)
+            player1.addInventoryItem("cchip", bet)
+			--player1.addAccountMoney('black_money', bet)
         else
-            player1.addMoney(bet)
+			player1.addInventoryItem("cchip", bet)
+            --player1.addMoney(bet)
         end
         if player2black then
             player2.addAccountMoney('black_money', bet)
@@ -274,42 +277,49 @@ AddEventHandler('program-blackjack:pickWinner', function()
             player2.addMoney(bet)
         end
     elseif player1result > 21 and player2result <= 21 then
-        TriggerClientEvent('esx:showNotification', player1.source, '~y~Wygrał Gracz z krzesła drugiego~s~!')
-        TriggerClientEvent('esx:showNotification', player2.source, '~y~Wygrał Gracz z krzesła drugiego~s~!')
-        TriggerClientEvent('esx:showNotification', croupier.source, '~y~Wygrał Gracz z krzesła drugiego~s~!')
+        TriggerClientEvent('esx:showNotification', player1.source, '~y~Player from the other chair won~s~!')
+        TriggerClientEvent('esx:showNotification', player2.source, '~y~Player from the other chair won~s~!')
+        TriggerClientEvent('esx:showNotification', croupier.source, '~y~Player from the other chair won~s~!')
         societyAccount.addMoney(bet*0.2)
-        player2.addMoney(bet*1.8)
+		player2.addInventoryItem("cchip", bet)
+        --player2.addMoney(bet*1.8)
     elseif player2result > 21 and player1result <= 21 then
-        TriggerClientEvent('esx:showNotification', player1.source, '~y~Wygrał Gracz z krzesła pierwszego~s~!')
-        TriggerClientEvent('esx:showNotification', player2.source, '~y~Wygrał Gracz z krzesła pierwszego~s~!')
-        TriggerClientEvent('esx:showNotification', croupier.source, '~y~Wygrał Gracz z krzesła pierwszego~s~!')
+        TriggerClientEvent('esx:showNotification', player1.source, '~y~Player from the first chair won~s~!')
+        TriggerClientEvent('esx:showNotification', player2.source, '~y~Player from the first chair won~s~!')
+        TriggerClientEvent('esx:showNotification', croupier.source, '~y~Player from the first chair won~s~!')
         societyAccount.addMoney(bet*0.2)
-        player1.addMoney(bet*1.8)
+        player1.addInventoryItem("cchip", bet)
+		--player1.addMoney(bet*1.8)
     elseif player1subtraction < player2subtraction then
-        TriggerClientEvent('esx:showNotification', player1.source, '~y~Wygrał Gracz z krzesła pierwszego~s~!')
-        TriggerClientEvent('esx:showNotification', player2.source, '~y~Wygrał Gracz z krzesła pierwszego~s~!')
-        TriggerClientEvent('esx:showNotification', croupier.source, '~y~Wygrał Gracz z krzesła pierwszego~s~!')
+        TriggerClientEvent('esx:showNotification', player1.source, '~y~Player from the first chair won~s~!')
+        TriggerClientEvent('esx:showNotification', player2.source, '~y~Player from the first chair won~s~!')
+        TriggerClientEvent('esx:showNotification', croupier.source, '~y~Player from the first chair won~s~!')
         societyAccount.addMoney(bet*0.2)
         player1.addMoney(bet*1.8)
     elseif player2subtraction < player1subtraction then
-        TriggerClientEvent('esx:showNotification', player1.source, '~y~Wygrał Gracz z krzesła drugiego~s~!')
-        TriggerClientEvent('esx:showNotification', player2.source, '~y~Wygrał Gracz z krzesła drugiego~s~!')
-        TriggerClientEvent('esx:showNotification', croupier.source, '~y~Wygrał Gracz z krzesła drugiego~s~!')
-        player2.addMoney(bet*1.8)
+        TriggerClientEvent('esx:showNotification', player1.source, '~y~Player from the other chair won~s~!')
+        TriggerClientEvent('esx:showNotification', player2.source, '~y~Player from the other chair won~s~!')
+        TriggerClientEvent('esx:showNotification', croupier.source, '~y~Player from the other chair won~s~!')
+        player2.addInventoryItem("cchip", bet)
+		--player2.addMoney(bet*1.8)
         societyAccount.addMoney(bet*0.2)
     elseif player1subtraction == player2subtraction then
-        TriggerClientEvent('esx:showNotification', player1.source, '~y~Remisik~s~!')
-        TriggerClientEvent('esx:showNotification', player2.source, '~y~Remisik~s~!')
-        TriggerClientEvent('esx:showNotification', croupier.source, '~y~Remisik~s~!')
+        TriggerClientEvent('esx:showNotification', player1.source, '~y~Draw~s~!')
+        TriggerClientEvent('esx:showNotification', player2.source, '~y~Draw~s~!')
+        TriggerClientEvent('esx:showNotification', croupier.source, '~y~Draw~s~!')
         if player1black then
-            player1.addAccountMoney('black_money', bet)
+			player1.addInventoryItem("cchip", bet)
+            --player1.addAccountMoney('black_money', bet)
         else
+			player1.addInventoryItem("cchip", bet)
             player1.addMoney(bet)
         end
         if player2black then
-            player2.addAccountMoney('black_money', bet)
+			player2.addInventoryItem("cchip", bet)
+            --player2.addAccountMoney('black_money', bet)
         else
-            player2.addMoney(bet)
+			player2.addInventoryItem("cchip", bet)
+            --player2.addMoney(bet)
         end
     end
     player2=nil

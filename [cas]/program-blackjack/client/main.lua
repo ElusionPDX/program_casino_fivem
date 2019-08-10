@@ -156,15 +156,15 @@ end)
 AddEventHandler('program-casino:hasEnteredMarker', function(zone)
 	if zone =='Croupier' then
 		CurrentAction     = 'Croupier'
-		CurrentActionMsg  = "~r~[E] ~b~Aby otworzyc stół BlackJack"
+		CurrentActionMsg  = "~r~[E] ~b~To open the BlackJack table"
 		CurrentActionData = {}
 	elseif zone == "Player1" then
 		CurrentAction     = 'Player1'
-		CurrentActionMsg  = "~r~[E] ~b~Aby dołączyć jako pierwszy gracz"
+		CurrentActionMsg  = "~r~[E] ~b~To join as the first player"
 		CurrentActionData = {}
 	elseif zone == "Player2" then
 		CurrentAction     = 'Player2'
-		CurrentActionMsg  = "~r~[E] ~b~Aby dołączyć jako drugi gracz"
+		CurrentActionMsg  = "~r~[E] ~b~To join as a second player"
 		CurrentActionData = {}
 	end
 end)
@@ -202,7 +202,7 @@ RegisterNetEvent('program-casino:notifyPlayers')
 AddEventHandler('program-casino:notifyPlayers', function(quantity)
 	local coords, letSleep = GetEntityCoords(PlayerPedId()), true
 	if GetDistanceBetweenCoords(coords, Config.BlackjackSites.Croupier.Pos.x, Config.BlackjackSites.Croupier.Pos.y, Config.BlackjackSites.Croupier.Pos.z, true) < 29 then
-		ESX.ShowAdvancedNotification("~p~BlackJack", "~p~Stawka: ~g~"..quantity.."$", "~p~Stół wystartował, pamiętaj że pierwszeństwo ma Golden/Platinium Ticket ", "CHAR_BANK_BOL", 9)
+		ESX.ShowAdvancedNotification("~p~BlackJack", "~p~Bid: ~g~"..quantity.."$", "~p~The table has started, remember that Golden / Platinum Ticket takes precedence ", "CHAR_BANK_BOL", 9)
 	end
 	Citizen.Wait(5000)
 end)
@@ -230,8 +230,8 @@ AddEventHandler('program-blackjack:givecards', function()
 	end
 	local wynik = cards[card][2]
 	local finish = false
-	ESX.ShowNotification("~p~Dołączyłeś do stołu, Twoja Pierwsza karta to ~b~" ..cards[card][1].. " ~p~o wartosci ~b~"..cards[card][2].."~n~~b~" ..wynik.." ~p~pkt")
-	ESX.ShowNotification("~o~Aby dobrać Kartę kliknij ~r~ [F]~o~ Aby zaprzestać i wyłożyć karty kliknij ~r~[X]")
+	ESX.ShowNotification("~p~You joined the table, your first card is~b~" ..cards[card][1].. " ~p~o Values~b~"..cards[card][2].."~n~~b~" ..wynik.." ~p~point")
+	ESX.ShowNotification("~o~Ato choose Card, hit ~r~ [F]~o~ To stop and show cards, hit ~r~[X]")
 	TriggerEvent("pNotify:SendNotification", {
 		text = "<font style='font-size: 14px'><div style='height: 150px; width: 100px; min-width: 100px; min-height: 150px; border-radius:10px; background-image: url("..cards[card][3].."); background-color:white; background-size: contain; background-position: center;  background-repeat: no-repeat;'></div>",
 		type = "cards",
@@ -254,15 +254,15 @@ AddEventHandler('program-blackjack:givecards', function()
 				timeout = 0,
 				layout = "bottomRight"
 			})
-			ESX.ShowNotification("~p~Dobrana karta to ~b~" ..cards[card][1].. " ~p~o wartosci ~b~"..cards[card][2].."~n~~p~Masz  ~b~" ..wynik.." ~p~pkt")
+			ESX.ShowNotification("~p~The card chosen is ~b~" ..cards[card][1].. " ~p~o values ~b~"..cards[card][2].."~n~~p~You Have  ~b~" ..wynik.." ~p~point")
 			if wynik>21 then
 				if aces > 0 then
 					aces = aces-1
 					wynik = wynik - 10
-					ESX.ShowNotification("~p~Miales Asa dlatego nie przegrales tylko policzono ci 1 pkt z asa zamiast 11")
+					ESX.ShowNotification("~p~You had an ace so you didn't lose, you just counted 1 point from the ace instead of 11")
 				else
 					finish=true
-					ESX.ShowNotification("~p~Łącznie masz ponad 21 punktów, czyli ~b~" ..wynik.. "~p~, Przegrasz chyba że przeciwnik też przekroczył 21")
+					ESX.ShowNotification("~p~You have a total of over 21 points, i.e. ~b~" ..wynik.. "~p~, You will lose unless your opponent has also crossed 21")
 					aces = 0
 				end
 			end
@@ -324,9 +324,9 @@ function Croupier()
 			end
 		)
 	elseif PlayerData.job.name ~= 'casino' then
-		ESX.ShowNotification("Musisz być krupierem aby otworzyć stół")
+		ESX.ShowNotification("You must be a dealer to open the table")
 	elseif gameInProgress == true and PlayerData.job.name == 'casino' then
-		ESX.ShowNotification("~b~Aktualnie trwa rozgrywka, aby rozpoczac nowa zakończ tą zdalnie ~r~[X]~b~ lub poczekaj do konca")
+		ESX.ShowNotification("~b~he game is currently underway, to start a new one end this game with ~r~[X]~b~ or wait until the end")
 	end
 	
 end
@@ -334,7 +334,7 @@ end
 function Player1()
 	ESX.TriggerServerCallback('program-blackjack:checkStarting', function(result)
 		if not result then
-			ESX.ShowNotification('~r~Stół nie wystartował, udaj się do krupiera aby poprosić o otwarcie stołu!')
+			ESX.ShowNotification('~r~The table did not start, go to the dealer to ask to open the table!')
 		else
 			if isPlatinium then
 				local elements = {
@@ -354,7 +354,7 @@ function Player1()
 					elseif data.current.value == 'black' then
 						ESX.TriggerServerCallback('program-blackjack:checkBlackMoney', function(result2)
 							if not result2 then
-								ESX.ShowNotification('~r~Nie masz wystarczająco pieniędzy aby dołączyć do stołu!')
+								ESX.ShowNotification('~r~You dont have enough money to join the table!')
 							else
 								isP1playing = true
 								TriggerServerEvent('program-blackjack:p1black')
@@ -366,7 +366,7 @@ function Player1()
 					elseif data.current.value == 'money' then
 						ESX.TriggerServerCallback('program-blackjack:checkMoney', function(result2)
 							if not result2 then
-								ESX.ShowNotification('~r~Nie masz wystarczająco pieniędzy aby dołączyć do stołu!')
+								ESX.ShowNotification('~r~You dont have enough money to join the table!')
 							else
 								isP1playing = true
 								TriggerServerEvent('program-blackjack:p1')
@@ -385,7 +385,7 @@ function Player1()
 			else
 				ESX.TriggerServerCallback('program-blackjack:checkMoney', function(result2)
 					if not result2 then
-						ESX.ShowNotification('~r~Nie masz wystarczająco pieniędzy aby dołączyć do stołu!')
+						ESX.ShowNotification('~r~You dont have enough money to join the table!')
 					else
 						isP1playing = true
 						TriggerServerEvent('program-blackjack:p1')
@@ -399,7 +399,7 @@ end
 function Player2()
 	ESX.TriggerServerCallback('program-blackjack:checkStarting', function(result)
 		if not result then
-			ESX.ShowNotification('~r~Stół nie wystartował, udaj się do krupiera aby poprosić o otwarcie stołu!')
+			ESX.ShowNotification('~r~The table did not start, go to the dealer to ask to open the table!')
 		else
 			if isPlatinium then
 				local elements = {
@@ -419,7 +419,7 @@ function Player2()
 					elseif data.current.value == 'black' then
 						ESX.TriggerServerCallback('program-blackjack:checkBlackMoney', function(result2)
 							if not result2 then
-								ESX.ShowNotification('~r~Nie masz wystarczająco pieniędzy aby dołączyć do stołu!')
+								ESX.ShowNotification('~r~You dont have enough money to join the table!')
 							else
 								isP2playing = true
 								TriggerServerEvent('program-blackjack:p2black')
@@ -431,7 +431,7 @@ function Player2()
 					elseif data.current.value == 'money' then
 						ESX.TriggerServerCallback('program-blackjack:checkMoney', function(result2)
 							if not result2 then
-								ESX.ShowNotification('~r~Nie masz wystarczająco pieniędzy aby dołączyć do stołu!')
+								ESX.ShowNotification('~r~You dont have enough money to join the table!')
 							else
 								isP2playing = true
 								TriggerServerEvent('program-blackjack:p2')
@@ -450,7 +450,7 @@ function Player2()
 			else
 				ESX.TriggerServerCallback('program-blackjack:checkMoney', function(result2)
 					if not result2 then
-						ESX.ShowNotification('~r~Nie masz wystarczająco pieniędzy aby dołączyć do stołu!')
+						ESX.ShowNotification('~r~You dont have enough money to join the table!')
 					else
 						isP2playing = true
 						TriggerServerEvent('program-blackjack:p2')

@@ -6,6 +6,7 @@ Config.MarkerSize                 = { x = 1.5, y = 1.5, z = 0.5 }
 Config.MarkerColor                = { r = 50, g = 50, b = 204 }
 
 
+
 Config.BlackjackSites = {
 
 	Croupier = {
@@ -34,5 +35,5 @@ Config.JobBlip = {
 	display = 4,
 	scale = 1.2,
 	colour = 63,
-	name = 'State Casino'
+	name = 'Karma State Casino'
 }
